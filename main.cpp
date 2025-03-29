@@ -27,16 +27,18 @@ int main()
 	
 	b3 << -6.400391328043042e-10, 
 			4.266924591433963e-10;
-	
+			
+	/*Calcolo la soluzione con QR*/			
 	Vector2d x1 = A1.colPivHouseholderQr().solve(b1);
 	Vector2d x2 = A2.colPivHouseholderQr().solve(b2);
 	Vector2d x3 = A3.colPivHouseholderQr().solve(b3);
 	
+	/*Calcolo la soluzione con metodo PALU*/
 	Vector2d y1 = A1.fullPivLu().solve(b1);
 	Vector2d y2 = A2.fullPivLu().solve(b2);
 	Vector2d y3 = A3.fullPivLu().solve(b3);
 	
-	cout.precision(16)
+	cout.precision(32);
 	cout << "The solution of A1 using the QR decomposition is:\n"
      << x1 << endl;
 	cout << "The solution of A2 using the QR decomposition is:\n"
@@ -51,6 +53,24 @@ int main()
     << endl << y2 << endl;
 	cout << "Here is, up to permutations, its LU decomposition matrix:"
     << endl << y3 << endl;
+	
+	/*Calcolo dell'errore relativo*/
+	double err1_QR = (A1*x1 - b1).norm() / b1.norm();
+	double err1_PALU = (A1*y1 - b1).norm() / b1.norm();
+	double err2_QR = (A2*x2 - b2).norm() / b2.norm();
+	double err2_PALU = (A2*y2 - b2).norm() / b2.norm();
+	double err3_QR = (A3*x3 - b3).norm() / b3.norm();
+	double err3_PALU = (A3*y3 - b3).norm() / b3.norm();
+	
+	
+	cout << "L'errore relativo rispetto a QR1 è: " << err1_QR << endl;
+	cout << "L'errore relativo rispetto a PALU1 è: " << err1_PALU << endl;
+	cout << "L'errore relativo rispetto a QR2 è: " << err2_QR << endl;
+	cout << "L'errore relativo rispetto a PALU2 è: " << err2_PALU << endl;
+	cout << "L'errore relativo rispetto a QR3 è: " << err3_QR << endl;
+	cout << "L'errore relativo rispetto a PALU3 è: " << err3_PALU << endl;
+	
+	
 	
     return 0;
 }
